@@ -1,0 +1,44 @@
+Notes
+
+File bufferer thread:
+	started when the user adds a new file to be sent
+	loads the file as a stream of bytes into the back of the output cue
+	sets output available event
+	returns when done
+	*should only be able to create one at a time
+
+
+
+Serial Reader thread:
+	continuously reads the input buffer on the port
+		Get SYN
+		Get next byte
+			if SOT
+				get remainder of frame
+			else
+				get next byte
+
+		error check
+		if no errors
+			discard SYN
+			if data
+				add to input cue
+				set inputAvailable event
+			else
+				set appropriate event
+
+
+
+
+Protocol controller thread:
+	Handles the protocol engine
+	wait for outputAvailable | ENQ
+		if output
+			enq
+
+		<rest of protocol engine. Have fun>
+
+
+
+* All threads should occasionally check for the end of program flag *
+* if waiting without timeout, should also wait on the end of program event *

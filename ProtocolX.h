@@ -21,6 +21,17 @@
 // includes
 // ----------------------------------------------------------------------------
 #include <Windows.h>
+#include <afxtempl.h>
+
+// Definitions
+// ----------------------------------------------------------------------------
+#define TIMEOUT 2000
+
+#define ACK 0x00000001
+#define NAK 0x00000002
+#define EOT 0x00000003
+#define ENQ 0x00000004
+#define SYN 0x00000005
 
 
 // Function Declarations
@@ -31,15 +42,25 @@ DWORD WINAPI ThreadProc(LPVOID threadParams);
 
 // Global Stores
 // ----------------------------------------------------------------------------
-byte _output[1024];
-byte _input[1024];
+CList<byte> outputCue;		// Cue for bytes to be sent
+
 
 // Global events
 // ----------------------------------------------------------------------------
+HANDLE hAck				= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_ACK"));
+HANDLE hNak				= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_NAK"));
+HANDLE hEnq				= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_ENQ"));
+HANDLE hInputAvailable	= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_INPUT_AVAILABLE"));
+HANDLE hOutputAVailable	= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_OUTPUT_AVAILABLE"));
+HANDLE hEndProgram		= CreateEvent(NULL, TRUE, FALSE, TEXT("PROTOCOLX_END_OF_PROGRAM"));
 
 
 // Global Sycronization objects
 // ----------------------------------------------------------------------------
-HANDLE hInputMutex	= CreateMutex(NULL, FALSE, TEXT("PROTOCOL_X_INPUT_BUFFER"));
-HANDLE hOutputMutex = CreateMutex(NULL, FALSE, TEXT("PROTOCOL_X_OUTPUT_BUFFER"));
-HANDLE hSerialIO	= CreateMutex(NULL, FALSE, TEXT("PROTOCOL_X_SERIAL_IO"));
+HANDLE hDatalinkControl		= CreateMutex(NULL, FALSE, TEXT("PROTOCOLX_LINK_OWNERSHIP"));
+
+
+// Global Thread Handles
+// ----------------------------------------------------------------------------
+HANDLE hFileLoaderThread;
+HANDLE hInputReaderThread;

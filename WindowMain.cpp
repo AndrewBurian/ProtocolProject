@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 	MSG Msg;
 	WNDCLASSEX Wcl;
 
-	static TCHAR Name[] = TEXT("Hello Win!");
+	static TCHAR Name[] = TEXT("ProtocolX");
 
 	// Define a Window class
 	Wcl.cbSize = sizeof (WNDCLASSEX);
@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 
 	Wcl.lpfnWndProc = WndProc;								// window function
 	Wcl.hInstance = hInst;									// handle to this instance
-	Wcl.hbrBackground = CreateSolidBrush(RGB(255, 0, 0));	// background
+	Wcl.hbrBackground = CreateSolidBrush(RGB(255, 255, 255));// background
 	Wcl.lpszClassName = Name;								// window class name
 
 	Wcl.lpszMenuName = NULL;								// no class menu 
