@@ -1,5 +1,40 @@
 Notes
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+winProc
+	create:
+		should spawn all the threads that are always running.
+	command: send file
+		open the file browser window
+		start file buffer thread with target file as arg
+	destroy:
+		set the program end flag
+		set the program end event
+		wait on all threads to die for some time
+			timeout
+				kill remaining thread
+		exit
 
+---------------------------------------------------------------------------------------
+GUI functions
+	contains some functions that all threads can access to write to the GUI
+	WriteOutputStatus(TCHAR* message);
+	WriteInputStatus(TCHAR* message);
+	... etc.
+
+---------------------------------------------------------------------------------------
+Output Functions
+	a collection of functions that will send the data and control frames
+	contains a STATIC (or global) byte array that is the frame to send
+	does all framing from the output cue, attaches headers, and CRC checkbytes
+	bool SendNext();
+	bool Resend();
+	bool SendEOT();
+	bool SendACK();
+	bool SendENQ();
+	...etc
+	
+---------------------------------------------------------------------------------------
 File bufferer thread:
 	started when the user adds a new file to be sent
 	loads the file as a stream of bytes into the back of the output cue
@@ -8,7 +43,7 @@ File bufferer thread:
 	*should only be able to create one at a time
 
 
-
+---------------------------------------------------------------------------------------
 Serial Reader thread:
 	continuously reads the input buffer on the port
 		Get SYN
@@ -29,7 +64,7 @@ Serial Reader thread:
 
 
 
-
+---------------------------------------------------------------------------------------
 Protocol controller thread:
 	Handles the protocol engine
 	wait for outputAvailable | ENQ
@@ -39,6 +74,15 @@ Protocol controller thread:
 		<rest of protocol engine. Have fun>
 
 
+---------------------------------------------------------------------------------------
+File writer thread:
+	Wait for inputAvailable event
+	Write input cue to file
+	*how we are going to handle different files is beyone me...*
 
+
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 * All threads should occasionally check for the end of program flag *
 * if waiting without timeout, should also wait on the end of program event *

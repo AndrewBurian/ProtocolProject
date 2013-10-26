@@ -37,12 +37,17 @@
 // Function Declarations
 // ----------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-DWORD WINAPI ThreadProc(LPVOID threadParams);
+
+DWORD WINAPI FileBufferThread(LPVOID threadParams);
+DWORD WINAPI SerialReadThread(LPVOID threadParams);
+DWORD WINAPI FileWriterThread(LPVOID threadParams);
+DWORD WINAPI ProtocolControlThread(LPVOID threadParams);
 
 
 // Global Stores
 // ----------------------------------------------------------------------------
 CList<byte> outputCue;		// Cue for bytes to be sent
+CList<byte> inputCue;		// Cue for bytes recieved waiting to be written to file
 
 
 // Global events
@@ -58,9 +63,14 @@ HANDLE hEndProgram		= CreateEvent(NULL, TRUE, FALSE, TEXT("PROTOCOLX_END_OF_PROG
 // Global Sycronization objects
 // ----------------------------------------------------------------------------
 HANDLE hDatalinkControl		= CreateMutex(NULL, FALSE, TEXT("PROTOCOLX_LINK_OWNERSHIP"));
+HANDLE hOutputBufferControl = CreateMutex(NULL, FALSE, TEXT("PROTOCOLX_OUTPUT_OWNERSHIP"));
 
 
 // Global Thread Handles
 // ----------------------------------------------------------------------------
 HANDLE hFileLoaderThread;
 HANDLE hInputReaderThread;
+
+// Global Flags
+// ----------------------------------------------------------------------------
+BOOL bProgramDone = FALSE;
