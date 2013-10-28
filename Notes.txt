@@ -33,7 +33,7 @@ Output Functions
 	bool SendACK();
 	bool SendENQ();
 	...etc
-	
+
 ---------------------------------------------------------------------------------------
 File bufferer thread:
 	started when the user adds a new file to be sent

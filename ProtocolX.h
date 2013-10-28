@@ -20,18 +20,22 @@
 
 // includes
 // ----------------------------------------------------------------------------
+using namespace std;
 #include <Windows.h>
-#include <afxtempl.h>
+#include <queue>
 
 // Definitions
 // ----------------------------------------------------------------------------
-#define TIMEOUT 2000
+#define TIMEOUT 200
+#define SEND_LIMIT 5
 
-#define ACK 0x00000001
-#define NAK 0x00000002
-#define EOT 0x00000003
-#define ENQ 0x00000004
-#define SYN 0x00000005
+#define ACK 0x
+#define NAK 0x
+#define EOT 0x
+#define ENQ 0x
+#define SYN 0x
+#define DC1 0x12
+#define DC2 0x13
 
 
 // Function Declarations
@@ -46,8 +50,8 @@ DWORD WINAPI ProtocolControlThread(LPVOID threadParams);
 
 // Global Stores
 // ----------------------------------------------------------------------------
-CList<byte> outputCue;		// Cue for bytes to be sent
-CList<byte> inputCue;		// Cue for bytes recieved waiting to be written to file
+queue<byte> outputCue;		// Cue for bytes to be sent
+queue<byte> inputCue;		// Cue for bytes recieved waiting to be written to file
 
 
 // Global events
@@ -55,6 +59,7 @@ CList<byte> inputCue;		// Cue for bytes recieved waiting to be written to file
 HANDLE hAck				= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_ACK"));
 HANDLE hNak				= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_NAK"));
 HANDLE hEnq				= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_ENQ"));
+HANDLE hEot				= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_EOT"));
 HANDLE hInputAvailable	= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_INPUT_AVAILABLE"));
 HANDLE hOutputAVailable	= CreateEvent(NULL, FALSE, FALSE, TEXT("PROTOCOLX_OUTPUT_AVAILABLE"));
 HANDLE hEndProgram		= CreateEvent(NULL, TRUE, FALSE, TEXT("PROTOCOLX_END_OF_PROGRAM"));
