@@ -18,7 +18,7 @@
 -- Notes Section
 ----------------------------------------------------------------------------------------------------------------------*/
 
-#include "ProtocolX.h"
+#include "BCP.h"
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 	LPSTR lspszCmdParam, int nCmdShow)

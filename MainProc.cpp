@@ -1,4 +1,4 @@
-#include "ProtocolX.h"
+#include "BCP.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message,
 	WPARAM wParam, LPARAM lParam)

@@ -81,7 +81,7 @@ File writer thread:
 	*how we are going to handle different files is beyone me...*
 
 
-
+	
 ---------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------
 * All threads should occasionally check for the end of program flag *
