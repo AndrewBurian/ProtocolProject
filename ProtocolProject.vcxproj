@@ -19,7 +19,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -64,10 +64,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ProtocolX.h" />
+    <ClInclude Include="BCP.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CRC.cpp" />
     <ClCompile Include="Output.cpp" />
+    <ClCompile Include="UIdisplay.cpp" />
     <ClCompile Include="WindowMain.cpp" />
     <ClCompile Include="MainProc.cpp" />
   </ItemGroup>

@@ -1,10 +1,11 @@
 ﻿/*------------------------------------------------------------------------------------------------------------------
--- SOURCE FILE: source.c - 	a program that does stuff
+-- SOURCE FILE: WindowMain.cpp		Responsible for setting up the program and initializing
+--									any global variables.
 --
--- PROGRAM: 
+-- PROGRAM:		BCP
 --
 -- FUNCTIONS:
--- int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,	LPSTR lspszCmdParam, int nCmdShow)
+--	int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,	LPSTR lspszCmdParam, int nCmdShow)
 --
 -- DATE: 		October 23, 2013
 --
@@ -12,10 +13,10 @@
 --
 -- DESIGNER: 	Andrew Burian
 --
--- PROGRAMMER: 	Andrew Burian
+-- PROGRAMMER: 	
 --
 -- NOTES:
--- Notes Section
+-- 
 ----------------------------------------------------------------------------------------------------------------------*/
 
 #include "BCP.h"
@@ -28,7 +29,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 	WNDCLASSEX Wcl;
 
 	static TCHAR Name[] = TEXT("BeCreativeProtocol");
-	static TCHAR Title[] = TEXT("BЗ CЯЗATIVЗ Protocol Engine");
+	static TCHAR Title[] = TEXT("(BЗ CЯЗATIVЗ) Protocol Engine");
 
 	// Define a Window class
 	Wcl.cbSize = sizeof (WNDCLASSEX);
@@ -52,7 +53,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 
 	hwnd = CreateWindow(
 		Name,					// name of window class
-		Name,					// title 
+		Title,					// title 
 		WS_OVERLAPPEDWINDOW,	// window style - normal
 		CW_USEDEFAULT,			// X coord
 		CW_USEDEFAULT,			// Y coord
@@ -68,10 +69,19 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	// Other setup
+	// Initialize Globals
 	// -----------------------------------------------------------------------
-	ovrReadPort.hEvent = hReadComplete;
-	ovrWritePort.hEvent = hWriteComplete;
+	
+	BOOL bProgramDone = FALSE;
+	HANDLE hAck = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_ACK"));
+	HANDLE hNak = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_NAK"));
+	HANDLE hEnq = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_ENQ"));
+	HANDLE hEot = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_EOT"));
+	HANDLE hInputAvailable = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_INPUT_AVAILABLE"));
+	HANDLE hOutputAVailable = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_OUTPUT_AVAILABLE"));
+	HANDLE hEndProgram = CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_END_OF_PROGRAM"));
+	HANDLE hReadComplete = CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_READ_COMPLETE"));
+	HANDLE hWriteComplete = CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_WRITE_COMPLETE"));
 
 	// -----------------------------------------------------------------------
 

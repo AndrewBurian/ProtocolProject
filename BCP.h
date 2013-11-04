@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: BCP.h - 	header file for the Protocol Project
 --
--- PROGRAM: 
+-- PROGRAM:		BCP
 --
 -- FUNCTIONS:
 -- none
@@ -15,7 +15,7 @@
 -- PROGRAMMER: 	Andrew Burian
 --
 -- NOTES:
--- Notes Section
+-- 
 ----------------------------------------------------------------------------------------------------------------------*/
 
 // includes
@@ -61,39 +61,39 @@ BOOL CheckCRC(byte* input, byte* crc);
 
 // Global Stores
 // ----------------------------------------------------------------------------
-queue<byte> quOutputCue;	// Cue for bytes to be sent
-queue<byte> quInputCue;		// Cue for bytes recieved waiting to be written to file
+extern queue<byte> quOutputQueue;		// Cue for bytes to be sent
+extern queue<byte> quInputQueue;		// Cue for bytes recieved waiting to be written to file
 
 
 // Global events
 // ----------------------------------------------------------------------------
-HANDLE hAck				= CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_ACK"));
-HANDLE hNak				= CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_NAK"));
-HANDLE hEnq				= CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_ENQ"));
-HANDLE hEot				= CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_EOT"));
-HANDLE hInputAvailable	= CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_INPUT_AVAILABLE"));
-HANDLE hOutputAVailable	= CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_OUTPUT_AVAILABLE"));
-HANDLE hEndProgram		= CreateEvent(NULL, TRUE,  FALSE, TEXT("BCP_END_OF_PROGRAM"));
+extern HANDLE hAck;
+extern HANDLE hNak;
+extern HANDLE hEnq;
+extern HANDLE hEot;
+extern HANDLE hInputAvailable;
+extern HANDLE hOutputAVailable;
+extern HANDLE hEndProgram;
 
 // Global Comm Port Object and utils
 // ----------------------------------------------------------------------------
-HANDLE hCommPort;			// The IO port used for the medium
-OVERLAPPED ovrReadPort;		// Overlapped Structure for reading to the comm port
-OVERLAPPED ovrWritePort;	// Overlapped Structure for writing to the comm port
-HANDLE hReadComplete	= CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_READ_COMPLETE"));
-HANDLE hWriteComplete	= CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_WRITE_COMPLETE"));
+extern HANDLE hCommPort;			// The IO port used for the medium
+extern OVERLAPPED ovrReadPort;		// Overlapped Structure for reading to the comm port
+extern OVERLAPPED ovrWritePort;
+extern HANDLE hReadComplete;
+extern HANDLE hWriteComplete;
 
 // Global Sycronization objects
 // ----------------------------------------------------------------------------
-HANDLE hDatalinkControl		= CreateMutex(NULL, FALSE, TEXT("BCP_LINK_OWNERSHIP"));
-HANDLE hOutputBufferControl = CreateMutex(NULL, FALSE, TEXT("BCP_OUTPUT_OWNERSHIP"));
+//extern HANDLE hDatalinkControl = CreateMutex(NULL, FALSE, TEXT("BCP_LINK_OWNERSHIP"));
+//extern HANDLE hOutputBufferControl = CreateMutex(NULL, FALSE, TEXT("BCP_OUTPUT_OWNERSHIP"));
 
 
 // Global Thread Handles
 // ----------------------------------------------------------------------------
-HANDLE hFileLoaderThread;
-HANDLE hInputReaderThread;
+extern HANDLE hFileLoaderThread;
+extern HANDLE hInputReaderThread;
 
 // Global Flags
 // ----------------------------------------------------------------------------
-BOOL bProgramDone = FALSE;
+extern BOOL bProgramDone;

@@ -1,9 +1,37 @@
-// output function library.
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE:	Output.cpp		A collection of functions that will be responsible
+--								for sending data over the link from the output queue.
+-- PROGRAM:		BCP
+--
+-- FUNCTIONS:
+--	BOOL WriteOut(byte* frame, unsigned len)
+--	BOOL SendNext();
+--	BOOL Resend();
+--	BOOL SendACK();
+--	BOOL SendNAK();
+--	BOOL SendENQ();
+--	BOOL SendEOT();
+--
+-- DATE: 		November 04, 2013
+--
+-- REVISIONS: 	none
+--
+-- DESIGNER: 	Andrew Burian
+--
+-- PROGRAMMER: 	Andrew Burian
+--
+-- NOTES:
+-- All functions return a boolean success value.
+----------------------------------------------------------------------------------------------------------------------*/
 #include "BCP.h"
 
 byte dataFrame[1024] = { NULL };
 byte ctrlFrame[2] = { NULL };
 int SOTval = 1;
+OVERLAPPED ovrWritePort;
+queue<byte> quOutputQueue;
+HANDLE hWriteComplete;
+HANDLE hCommPort;
 
 BOOL WriteOut(byte* frame, unsigned len)
 {
@@ -20,10 +48,11 @@ BOOL WriteOut(byte* frame, unsigned len)
 			return TRUE;
 		case WAIT_TIMEOUT:
 			return FALSE;
+		case WAIT_ABANDONED:
+			return FALSE;
 	}
 
-	// how you would get here is beyond me, but probably failed
-	// or wait abandoned or something.
+	// how you would get here is beyond me, but probably failed horribly
 	return FALSE;
 }
 
@@ -43,7 +72,7 @@ BOOL Resend()
 BOOL SendNext()
 {
 	// check for no data to send
-	if (quOutputCue.empty())
+	if (quOutputQueue.empty())
 		return FALSE;
 
 	// start of frame
@@ -66,10 +95,10 @@ BOOL SendNext()
 	int i = 2;
 	for (i = 2; i < 1022; ++i)
 	{
-		if (quOutputCue.empty())
+		if (quOutputQueue.empty())
 			break;
-		dataFrame[i] = quOutputCue.front();
-		quOutputCue.pop();
+		dataFrame[i] = quOutputQueue.front();
+		quOutputQueue.pop();
 	}
 	// pad if nessesary
 	while (i < 1022)
