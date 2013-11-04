@@ -1,9 +1,31 @@
 // output function library.
 #include "BCP.h"
 
-static byte dataFrame[1024] = { NULL };
-static int SOTval = 1;
+byte dataFrame[1024] = { NULL };
+byte ctrlFrame[2] = { NULL };
+int SOTval = 1;
 
+BOOL WriteOut(byte* frame, unsigned len)
+{
+	// Start Async write
+	WriteFile(hCommPort, NULL, len, NULL, &ovrWritePort);
+	
+	// wait for event imbedded in overlapped struct
+	int result = WaitForSingleObject(hWriteComplete, TIMEOUT);
+	ResetEvent(hWriteComplete);
+
+	switch (result)
+	{
+		case WAIT_OBJECT_0:
+			return TRUE;
+		case WAIT_TIMEOUT:
+			return FALSE;
+	}
+
+	// how you would get here is beyond me, but probably failed
+	// or wait abandoned or something.
+	return FALSE;
+}
 
 BOOL Resend()
 {
@@ -14,13 +36,81 @@ BOOL Resend()
 		return FALSE;
 	}
 
-	// send code here
-
-	return TRUE;
+	// write to port
+	return WriteOut(dataFrame, 1024);
 }
 
 BOOL SendNext()
 {
-	
+	// check for no data to send
+	if (quOutputCue.empty())
+		return FALSE;
+
+	// start of frame
+	dataFrame[0] = SYN;
+
+	//SOT byte
+	if (SOTval == 1)
+	{
+		dataFrame[1] = DC1;
+		SOTval = 2;
+	}
+	if (SOTval == 2)
+	{
+		dataFrame[1] = DC2;
+		SOTval = 1;
+	}
+
+
+	// data portion
+	int i = 2;
+	for (i = 2; i < 1022; ++i)
+	{
+		if (quOutputCue.empty())
+			break;
+		dataFrame[i] = quOutputCue.front();
+		quOutputCue.pop();
+	}
+	// pad if nessesary
+	while (i < 1022)
+	{
+		dataFrame[i] = NULL;
+		++i;
+	}
+
+	// add crc
+	if (!MakeCRC(&dataFrame[0], &dataFrame[1022]))
+		return FALSE;
+
+	// write to port
+	return WriteOut(dataFrame, 1024);
 }
 
+BOOL SendACK()
+{
+	ctrlFrame[0] = SYN;
+	ctrlFrame[1] = ACK;
+	return WriteOut(ctrlFrame, 2);
+}
+
+BOOL SendNAK()
+{
+	ctrlFrame[0] = SYN;
+	ctrlFrame[1] = NAK;
+	return WriteOut(ctrlFrame, 2);
+}
+
+BOOL SendENQ()
+{
+	ctrlFrame[0] = SYN;
+	ctrlFrame[1] = ENQ;
+	return WriteOut(ctrlFrame, 2);
+}
+
+BOOL SendEOT()
+{
+	ctrlFrame[0] = SYN;
+	ctrlFrame[1] = EOT;
+	SOTval = 1;
+	return WriteOut(ctrlFrame, 2);
+}

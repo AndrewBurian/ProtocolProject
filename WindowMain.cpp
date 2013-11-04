@@ -1,4 +1,4 @@
-/*------------------------------------------------------------------------------------------------------------------
+﻿/*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: source.c - 	a program that does stuff
 --
 -- PROGRAM: 
@@ -27,7 +27,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 	MSG Msg;
 	WNDCLASSEX Wcl;
 
-	static TCHAR Name[] = TEXT("ProtocolX");
+	static TCHAR Name[] = TEXT("BeCreativeProtocol");
+	static TCHAR Title[] = TEXT("BЗ CЯЗATIVЗ Protocol Engine");
 
 	// Define a Window class
 	Wcl.cbSize = sizeof (WNDCLASSEX);
@@ -66,6 +67,13 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 	// Display the window
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
+
+	// Other setup
+	// -----------------------------------------------------------------------
+	ovrReadPort.hEvent = hReadComplete;
+	ovrWritePort.hEvent = hWriteComplete;
+
+	// -----------------------------------------------------------------------
 
 	// Create the message loop
 	while (GetMessage(&Msg, NULL, 0, 0))
