@@ -1,6 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE:	Output.cpp		A collection of functions that will be responsible
---								for sending data over the link from the output queue.
+--								for sending data frames over the link from the output 
+--								queue as well as the control frames.
 -- PROGRAM:		BCP
 --
 -- FUNCTIONS:
@@ -12,7 +13,7 @@
 --	BOOL SendENQ();
 --	BOOL SendEOT();
 --
--- DATE: 		November 04, 2013
+-- DATE: 		November 02, 2013
 --
 -- REVISIONS: 	none
 --
@@ -31,7 +32,7 @@ int SOTval = 1;
 OVERLAPPED ovrWritePort;
 queue<byte> quOutputQueue;
 HANDLE hWriteComplete;
-HANDLE hCommPort;
+//HANDLE hCommPort;
 
 BOOL WriteOut(byte* frame, unsigned len)
 {

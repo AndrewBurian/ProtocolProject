@@ -22,6 +22,7 @@
 // ----------------------------------------------------------------------------
 using namespace std;
 #include <Windows.h>
+#include <Windowsx.h>
 #include <queue>
 
 // Definitions
@@ -71,6 +72,9 @@ extern HANDLE hAck;
 extern HANDLE hNak;
 extern HANDLE hEnq;
 extern HANDLE hEot;
+extern HANDLE hDataRecieved;
+extern HANDLE hBadDataRecieved;
+
 extern HANDLE hInputAvailable;
 extern HANDLE hOutputAVailable;
 extern HANDLE hEndProgram;

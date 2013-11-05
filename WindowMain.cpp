@@ -21,6 +21,8 @@
 
 #include "BCP.h"
 
+HANDLE hCommPort;
+
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 	LPSTR lspszCmdParam, int nCmdShow)
 {
@@ -65,25 +67,31 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 		NULL					// no additional arguments
 		);
 
-	// Display the window
-	ShowWindow(hwnd, nCmdShow);
-	UpdateWindow(hwnd);
-
 	// Initialize Globals
 	// -----------------------------------------------------------------------
-	
+
 	BOOL bProgramDone = FALSE;
 	HANDLE hAck = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_ACK"));
 	HANDLE hNak = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_NAK"));
 	HANDLE hEnq = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_ENQ"));
 	HANDLE hEot = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_EOT"));
+	HANDLE hDataRecieved = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_DATA_RECIEVED"));
+	HANDLE hBadDataRecieved = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_BAD_DATA_RECIEVED"));
 	HANDLE hInputAvailable = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_INPUT_AVAILABLE"));
 	HANDLE hOutputAVailable = CreateEvent(NULL, FALSE, FALSE, TEXT("BCP_OUTPUT_AVAILABLE"));
 	HANDLE hEndProgram = CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_END_OF_PROGRAM"));
 	HANDLE hReadComplete = CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_READ_COMPLETE"));
 	HANDLE hWriteComplete = CreateEvent(NULL, TRUE, FALSE, TEXT("BCP_WRITE_COMPLETE"));
 
+
+	ovrWritePort.hEvent = hWriteComplete;
+	ovrReadPort.hEvent = hReadComplete;
+
 	// -----------------------------------------------------------------------
+
+	// Display the window
+	ShowWindow(hwnd, nCmdShow);
+	UpdateWindow(hwnd);
 
 	// Create the message loop
 	while (GetMessage(&Msg, NULL, 0, 0))
