@@ -62,8 +62,8 @@ BOOL CheckCRC(byte* input, byte* crc);
 
 // Global Stores
 // ----------------------------------------------------------------------------
-queue<byte> quOutputQueue;		// Cue for bytes to be sent
-queue<byte> quInputQueue;		// Cue for bytes recieved waiting to be written to file
+extern queue<byte> quOutputQueue;		// Cue for bytes to be sent
+extern queue<byte> quInputQueue;		// Cue for bytes recieved waiting to be written to file
 
 
 // Global events

@@ -32,12 +32,12 @@ int SOTval = 1;
 OVERLAPPED ovrWritePort;
 queue<byte> quOutputQueue;
 HANDLE hWriteComplete;
-HANDLE hIOLock = CreateMutex(NULL, FALSE, MUTEX_IO_PORT);
+HANDLE hOutLock = CreateMutex(NULL, FALSE, MUTEX_IO_PORT);
 
 BOOL WriteOut(byte* frame, unsigned len)
 {
 	// mutex lock
-	WaitForSingleObject(hIOLock, INFINITE);
+	WaitForSingleObject(hOutLock, INFINITE);
 	// Start Async write
 	WriteFile(hCommPort, NULL, len, NULL, &ovrWritePort);
 	
@@ -46,7 +46,7 @@ BOOL WriteOut(byte* frame, unsigned len)
 	ResetEvent(hWriteComplete);
 	
 	// mutex release
-	ReleaseMutex(hIOLock);
+	ReleaseMutex(hOutLock);
 	
 	switch (result)
 	{

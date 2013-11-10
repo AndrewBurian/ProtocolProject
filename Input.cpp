@@ -19,12 +19,12 @@ BOOL bProgramDone;
 byte input[1024] = { NULL };
 DWORD expected = DC1;
 queue<byte> quInputQueue;
-HANDLE hIOLock = CreateMutex(NULL, FALSE, MUTEX_IO_PORT);
+HANDLE hInLock = CreateMutex(NULL, FALSE, MUTEX_IO_PORT);
 
 int ReadIn(byte* frame, unsigned len, DWORD wait)
 {
 	//mutex lock
-	WaitForSingleObject(hIOLock);
+	WaitForSingleObject(hInLock, INFINITE);
 	// Start Async write
 	ReadFile(hCommPort, frame, len, NULL, &ovrReadPort);
 
@@ -33,7 +33,7 @@ int ReadIn(byte* frame, unsigned len, DWORD wait)
 	int result = WaitForMultipleObjects(2, events, FALSE, wait);
 
 	// mutex release
-	ReleaseMutex(hIOLock);
+	ReleaseMutex(hInLock);
 
 	switch (result)
 	{
