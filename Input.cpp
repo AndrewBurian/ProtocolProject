@@ -8,26 +8,32 @@
 //HANDLE hCommPort;
 HANDLE hReadComplete;
 HANDLE hEndProgram;
-HANDLE hDataRecieved;
-HANDLE hBadDataRecieved;
-HANDLE hAck;
-HANDLE hNak;
-HANDLE hEot;
-HANDLE hEnq;
+HANDLE hDataRecieved = CreateEvent(NULL, FALSE, FALSE, EVENT_DATA_RECEIVED);
+HANDLE hBadDataRecieved = CreateEvent(NULL, FALSE, FALSE, EVENT_BAD_DATA_RECEIVED);
+HANDLE hAck = CreateEvent(NULL, FALSE, FALSE, EVENT_ACK);
+HANDLE hNak = CreateEvent(NULL, FALSE, FALSE, EVENT_NAK);
+HANDLE hEot = CreateEvent(NULL, FALSE, FALSE, EVENT_EOT);
+HANDLE hEnq = CreateEvent(NULL, FALSE, FALSE, EVENT_ENQ);
 OVERLAPPED ovrReadPort;
 BOOL bProgramDone;
 byte input[1024] = { NULL };
 DWORD expected = DC1;
 queue<byte> quInputQueue;
+HANDLE hIOLock = CreateMutex(NULL, FALSE, MUTEX_IO_PORT);
 
 int ReadIn(byte* frame, unsigned len, DWORD wait)
 {
+	//mutex lock
+	WaitForSingleObject(hIOLock);
 	// Start Async write
 	ReadFile(hCommPort, frame, len, NULL, &ovrReadPort);
 
 	// wait for event imbedded in overlapped struct
 	HANDLE events[] = { hReadComplete, hEndProgram };
 	int result = WaitForMultipleObjects(2, events, FALSE, wait);
+
+	// mutex release
+	ReleaseMutex(hIOLock);
 
 	switch (result)
 	{

@@ -62,22 +62,19 @@ BOOL CheckCRC(byte* input, byte* crc);
 
 // Global Stores
 // ----------------------------------------------------------------------------
-extern queue<byte> quOutputQueue;		// Cue for bytes to be sent
-extern queue<byte> quInputQueue;		// Cue for bytes recieved waiting to be written to file
+queue<byte> quOutputQueue;		// Cue for bytes to be sent
+queue<byte> quInputQueue;		// Cue for bytes recieved waiting to be written to file
 
 
 // Global events
 // ----------------------------------------------------------------------------
-extern HANDLE hAck;
-extern HANDLE hNak;
-extern HANDLE hEnq;
-extern HANDLE hEot;
-extern HANDLE hDataRecieved;
-extern HANDLE hBadDataRecieved;
-
-extern HANDLE hInputAvailable;
-extern HANDLE hOutputAVailable;
-extern HANDLE hEndProgram;
+#define EVENT_ACK TEXT("BCP_ACK")
+#define EVENT_NAK TEXT("BCP_NAK")
+#define EVENT_ENQ TEXT("BCP_ENQ")
+#define EVENT_EOT TEXT("BCP_EOT")
+#define EVENT_DATA_RECEIVED TEXT("BCP_DATA_RECEIVED")
+#define EVENT_BAD_DATA_RECEIVED TEXT("BCP_BAD_DATA_RECEIVED")
+#define EVENT_END_PROGRAM TEXT("BCP_END_OF_PROGRAM")
 
 // Global Comm Port Object and utils
 // ----------------------------------------------------------------------------
@@ -89,14 +86,8 @@ extern HANDLE hWriteComplete;
 
 // Global Sycronization objects
 // ----------------------------------------------------------------------------
-//extern HANDLE hDatalinkControl = CreateMutex(NULL, FALSE, TEXT("BCP_LINK_OWNERSHIP"));
-//extern HANDLE hOutputBufferControl = CreateMutex(NULL, FALSE, TEXT("BCP_OUTPUT_OWNERSHIP"));
+#define MUTEX_IO_PORT TEXT("BCP_IO_CONTROL")
 
-
-// Global Thread Handles
-// ----------------------------------------------------------------------------
-extern HANDLE hFileLoaderThread;
-extern HANDLE hInputReaderThread;
 
 // Global Flags
 // ----------------------------------------------------------------------------

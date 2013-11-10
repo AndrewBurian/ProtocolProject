@@ -32,17 +32,22 @@ int SOTval = 1;
 OVERLAPPED ovrWritePort;
 queue<byte> quOutputQueue;
 HANDLE hWriteComplete;
-//HANDLE hCommPort;
+HANDLE hIOLock = CreateMutex(NULL, FALSE, MUTEX_IO_PORT);
 
 BOOL WriteOut(byte* frame, unsigned len)
 {
+	// mutex lock
+	WaitForSingleObject(hIOLock, INFINITE);
 	// Start Async write
 	WriteFile(hCommPort, NULL, len, NULL, &ovrWritePort);
 	
 	// wait for event imbedded in overlapped struct
 	int result = WaitForSingleObject(hWriteComplete, TIMEOUT);
 	ResetEvent(hWriteComplete);
-
+	
+	// mutex release
+	ReleaseMutex(hIOLock);
+	
 	switch (result)
 	{
 		case WAIT_OBJECT_0:
