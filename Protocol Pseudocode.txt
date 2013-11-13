@@ -121,7 +121,10 @@ Wait for Ack(2)
 		if no more data
 			go to Done Sending
 	if timeout
-		go to Create Packet (resend)
+		if attempted 5 times
+			give up (return to idle)
+		else
+			go to Create Packet (resend)
 }
 
 Done Sending
