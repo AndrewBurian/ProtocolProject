@@ -92,3 +92,16 @@ extern HANDLE hWriteComplete;
 // Global Flags
 // ----------------------------------------------------------------------------
 extern BOOL bProgramDone;
+
+// GUI functionallity
+// ----------------------------------------------------------------------------
+struct GUIDATA{
+	HWND pcktStat_Sent;
+	HWND pcktStat_Received;
+	HWND pcktStat_Lost;
+};
+
+VOID SetupGUI(GUIDATA* data);
+VOID GUI_Sent();
+VOID GUI_Received();
+VOID GUI_Lost();
