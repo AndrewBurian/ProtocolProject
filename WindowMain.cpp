@@ -59,8 +59,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hprevInstance,
 		WS_OVERLAPPEDWINDOW,	// window style - normal
 		CW_USEDEFAULT,			// X coord
 		CW_USEDEFAULT,			// Y coord
-		CW_USEDEFAULT,			// width
-		CW_USEDEFAULT,			// height
+		800,			// width
+		600,			// height
 		NULL,					// no parent window
 		NULL,					// no menu
 		hInst,					// instance handle
