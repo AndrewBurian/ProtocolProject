@@ -62,8 +62,8 @@ BOOL CheckCRC(byte* input, byte* crc);
 
 // Global Stores
 // ----------------------------------------------------------------------------
-extern queue<byte> quOutputQueue;		// Cue for bytes to be sent
-extern queue<byte> quInputQueue;		// Cue for bytes recieved waiting to be written to file
+extern queue<byte> quOutputQueue;		// Queue for bytes to be sent
+extern queue<byte> quInputQueue;		// Queue for bytes received waiting to be written to file
 
 
 // Global events
@@ -75,6 +75,8 @@ extern queue<byte> quInputQueue;		// Cue for bytes recieved waiting to be writte
 #define EVENT_DATA_RECEIVED TEXT("BCP_DATA_RECEIVED")
 #define EVENT_BAD_DATA_RECEIVED TEXT("BCP_BAD_DATA_RECEIVED")
 #define EVENT_END_PROGRAM TEXT("BCP_END_OF_PROGRAM")
+#define EVENT_OUTPUT_AVAILABLE TEXT("BCP_OUTPUT_AVAILABLE")
+#define EVENT_INPUT_AVAILABLE TEXT("BCP_INPUT_AVAILBLE")
 
 // Global Comm Port Object and utils
 // ----------------------------------------------------------------------------

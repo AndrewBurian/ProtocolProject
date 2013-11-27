@@ -6,7 +6,7 @@
 --
 -- FUNCTIONS:
 -- 
---  (This first function was taken from internet resources)
+-- (This first function was taken from internet resources)
 -- unsigned short crc16_ccitt(const byte *buf, int len)
 -- void crc2char (short input, char* &CRC){
 -- int char2crc (char* input){

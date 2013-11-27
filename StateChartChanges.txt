@@ -1,0 +1,9 @@
+To Update on the State Chart
+----------------------------
+
+*	CRC creation and checking functions need to be listed
+	[]	They're currently hidden in Create Packet (CRC creation) and Rx Data (CRC checking)
+
+*	Number of retransmission attempts needs to be listed on the "Give up" line for Tx Packet
+
+*	

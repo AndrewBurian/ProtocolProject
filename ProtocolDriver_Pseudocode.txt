@@ -1,0 +1,33 @@
+ProtocolDriver
+--------------
+Wait for either ENQ Rx'd or Output Available event
+If ENQ Rx'd
+	Tx ACK1
+	Reset ENQ event
+	Wait for Data to be Rx'd
+	If Rx EOT or connection timed out
+		Return to Idle
+	Else If Rx Data
+		If Data has valid CRC
+			Tx ACK2
+			Return to Wait for Data to be Rx'd
+		Else
+			Do nothing (force retransmission)
+Else if Output Available
+	Tx ENQ
+	Wait for ACK1
+	If Rx ACK1
+		While there's data to send, the sending limit isn't reached, and retransmit hasn't failed
+			Create Packet
+			Tx Packet
+			If response times out
+				While Retransmission Attempts <= 5
+					Attempt to Retransmit Packet
+				If more than 5 Retransmission Attempts
+					Retransmit failed; exit loop
+		If Retransmit Failed
+			Return to Idle
+		Else
+			Tx EOT
+	Else
+		Return to Idle

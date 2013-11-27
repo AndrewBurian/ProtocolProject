@@ -25,15 +25,16 @@ int ReadIn(byte* frame, unsigned len, DWORD wait)
 {
 	//mutex lock
 	WaitForSingleObject(hInLock, INFINITE);
-	// Start Async write
+
+	// Start write
 	ReadFile(hCommPort, frame, len, NULL, &ovrReadPort);
+
+	// mutex release
+	ReleaseMutex(hInLock);
 
 	// wait for event imbedded in overlapped struct
 	HANDLE events[] = { hReadComplete, hEndProgram };
 	int result = WaitForMultipleObjects(2, events, FALSE, wait);
-
-	// mutex release
-	ReleaseMutex(hInLock);
 
 	switch (result)
 	{
